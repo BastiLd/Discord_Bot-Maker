@@ -17,7 +17,7 @@ function at(x: number, y: number): XYPosition {
 function moderationTemplate(): BuilderTemplate {
   const project = createEmptyProject({
     name: 'Moderation Starter',
-    description: 'Slash-Command mit Rollenzuweisung und BestÃ¤tigungsantwort.',
+    description: 'Slash-Command mit Rollenzuweisung und Bestätigungsantwort.',
     mode: 'advanced',
   });
 
@@ -28,17 +28,17 @@ function moderationTemplate(): BuilderTemplate {
     commandDescription: 'Zeigt den Moderationshinweis an.',
   });
   const role = createNode('action', at(360, 60), {
-    title: 'Rolle prÃ¼fen',
-    summary: 'Markiert Moderationsrollen fÃ¼r spÃ¤tere PrÃ¼fung.',
+    title: 'Rolle prüfen',
+    summary: 'Markiert Moderationsrollen für spätere Prüfung.',
     actionType: 'assign-role',
     roleName: 'Moderator',
-    notes: 'Der Export erzeugt eine sichere Grundlogik und markiert SpezialfÃ¤lle in EXPORT_NOTES.md.',
+    notes: 'Der Export erzeugt eine sichere Grundlogik und markiert Spezialfälle in EXPORT_NOTES.md.',
   });
   const reply = createNode('action', at(660, 80), {
     title: 'Antwort senden',
-    summary: 'Schickt eine sichtbare RÃ¼ckmeldung im Command.',
+    summary: 'Schickt eine sichtbare Rückmeldung im Command.',
     actionType: 'reply',
-    responseText: 'Moderations-Check abgeschlossen. Bitte Ã¼berprÃ¼fe den User manuell.',
+    responseText: 'Moderations-Check abgeschlossen. Bitte überprüfe den User manuell.',
   });
 
   project.graph.nodes = [command, role, reply];
@@ -51,7 +51,7 @@ function moderationTemplate(): BuilderTemplate {
   return {
     id: 'moderation-starter',
     name: 'Moderation Starter',
-    description: 'Ein kleiner, sicherer Einstieg fÃ¼r Slash Commands und Rollenlogik.',
+    description: 'Ein kleiner, sicherer Einstieg für Slash Commands und Rollenlogik.',
     project,
   };
 }
@@ -70,16 +70,16 @@ function welcomeTemplate(): BuilderTemplate {
   });
   const embed = createNode('action', at(380, 40), {
     title: 'Willkommens-Embed',
-    summary: 'Versendet eine DM mit gestylter BegrÃ¼ÃŸung.',
+    summary: 'Versendet eine DM mit gestylter Begrüßung.',
     actionType: 'embed',
     embedTitle: 'Willkommen auf dem Server',
     embedDescription: 'Lies bitte die Regeln und nutze die Buttons, um loszulegen.',
   });
   const button = createNode('ui', at(700, 120), {
     title: 'Regel-Button',
-    summary: 'HÃ¤ngt eine Button-Interaktion an die Nachricht.',
+    summary: 'Hängt eine Button-Interaktion an die Nachricht.',
     uiType: 'button',
-    buttonLabel: 'Regeln Ã¶ffnen',
+    buttonLabel: 'Regeln öffnen',
     responseText: 'Die Regeln sind jetzt markiert. Passe die Zielaktion im Export an.',
   });
 
@@ -93,7 +93,7 @@ function welcomeTemplate(): BuilderTemplate {
   return {
     id: 'welcome-flow',
     name: 'Welcome Flow',
-    description: 'Ein visueller Startpunkt fÃ¼r Join-Events, Embeds und Buttons.',
+    description: 'Ein visueller Startpunkt für Join-Events, Embeds und Buttons.',
     project,
   };
 }
@@ -101,13 +101,13 @@ function welcomeTemplate(): BuilderTemplate {
 function ticketTemplate(): BuilderTemplate {
   const project = createEmptyProject({
     name: 'Ticket Panel',
-    description: 'Prefix-Command, Embed und Button fÃ¼r ein Ticket-Panel.',
+    description: 'Prefix-Command, Embed und Button für ein Ticket-Panel.',
     mode: 'advanced',
   });
 
   const command = createNode('command', at(60, 80), {
     title: 'Prefix Command !ticket',
-    summary: 'Ã–ffnet das Ticket-Panel per Prefix Command.',
+    summary: 'Öffnet das Ticket-Panel per Prefix Command.',
     commandName: 'ticket',
     commandStyle: 'prefix',
     commandDescription: 'Sendet das Ticket-Panel.',
@@ -117,14 +117,14 @@ function ticketTemplate(): BuilderTemplate {
     summary: 'Zeigt eine Ticket-Anleitung an.',
     actionType: 'embed',
     embedTitle: 'Support Ticket',
-    embedDescription: 'DrÃ¼cke den Button, um dein Anliegen zu starten.',
+    embedDescription: 'Drücke den Button, um dein Anliegen zu starten.',
   });
   const button = createNode('ui', at(700, 80), {
     title: 'Ticket-Button',
     summary: 'Stellt eine klickbare Aktion bereit.',
     uiType: 'button',
-    buttonLabel: 'Ticket Ã¶ffnen',
-    responseText: 'Ticket-Interaktion ausgelÃ¶st.',
+    buttonLabel: 'Ticket öffnen',
+    responseText: 'Ticket-Interaktion ausgelöst.',
   });
 
   project.graph.nodes = [command, embed, button];
@@ -137,7 +137,7 @@ function ticketTemplate(): BuilderTemplate {
   return {
     id: 'ticket-panel',
     name: 'Ticket Panel',
-    description: 'Ein Export, der direkt eine Button-basierte Support-FlÃ¤che erzeugt.',
+    description: 'Ein Export, der direkt eine Button-basierte Support-Fläche erzeugt.',
     project,
   };
 }

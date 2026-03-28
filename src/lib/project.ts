@@ -77,16 +77,16 @@ export function createEmptyProject(
       nodes: [
         createNode('command', { x: 80, y: 100 }, {
           title: 'Slash Command /hello',
-          summary: 'Ein sicherer Starterknoten fÃ¼r neue Projekte.',
+          summary: 'Ein sicherer Starterknoten für neue Projekte.',
           commandName: 'hello',
-          commandDescription: 'Antwortet mit einer kurzen BegrÃ¼ÃŸung.',
+          commandDescription: 'Antwortet mit einer kurzen Begrüßung.',
           commandStyle: 'slash',
         }),
         createNode('action', { x: 420, y: 100 }, {
           title: 'Antwort senden',
           summary: 'Schickt eine Standardnachricht an Discord.',
           actionType: 'reply',
-          responseText: 'Hallo! Dein visueller Bot lÃ¤uft.',
+          responseText: 'Hallo! Dein visueller Bot läuft.',
         }),
       ],
       edges: [],

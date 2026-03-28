@@ -1,4 +1,5 @@
 import type { BotProject } from '../types';
+import { deepRepairText } from './text';
 
 const STORAGE_KEY = 'discord-bot-maker/project';
 
@@ -13,7 +14,7 @@ export function loadProject(): BotProject | null {
   }
 
   try {
-    return JSON.parse(raw) as BotProject;
+    return deepRepairText(JSON.parse(raw) as BotProject);
   } catch {
     return null;
   }

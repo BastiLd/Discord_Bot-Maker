@@ -11,7 +11,7 @@ export function BuilderNodeCard({ data, selected }: NodeProps<BuilderNode>) {
 
   return (
     <div className={`builder-node-card${selected ? ' is-selected' : ''}`} style={style}>
-      <Handle type="target" position={Position.Left} />
+      <Handle className="builder-node-card__handle" type="target" position={Position.Left} />
       <div className="builder-node-card__chip-row">
         <span className="builder-node-card__chip">{data.kind}</span>
         {data.imported ? <span className="builder-node-card__chip builder-node-card__chip--soft">import</span> : null}
@@ -19,7 +19,7 @@ export function BuilderNodeCard({ data, selected }: NodeProps<BuilderNode>) {
       <h3>{data.title}</h3>
       <p>{data.summary}</p>
       {data.sourceFile ? <small>{data.sourceFile}</small> : null}
-      <Handle type="source" position={Position.Right} />
+      <Handle className="builder-node-card__handle" type="source" position={Position.Right} />
     </div>
   );
 }

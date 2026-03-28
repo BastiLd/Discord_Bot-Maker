@@ -16,6 +16,8 @@
   --warning: #ffcf72;
   --danger: #ff8d8d;
   --shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+  --scrollbar-thumb: rgba(255, 181, 115, 0.38);
+  --scrollbar-track: rgba(255, 255, 255, 0.03);
 }
 
 * {
@@ -26,7 +28,11 @@ html,
 body,
 #root {
   margin: 0;
-  min-height: 100%;
+  height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -35,6 +41,7 @@ body {
     radial-gradient(circle at top left, rgba(255, 129, 61, 0.22), transparent 32%),
     radial-gradient(circle at top right, rgba(82, 215, 255, 0.18), transparent 28%),
     linear-gradient(160deg, #0f0b08 0%, #17120f 42%, #0d1015 100%);
+  overflow: hidden;
 }
 
 body::before {
@@ -47,6 +54,22 @@ body::before {
   background-size: 60px 60px;
   mask-image: radial-gradient(circle at center, black, transparent 92%);
   pointer-events: none;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
 }
 
 button,
@@ -80,6 +103,11 @@ select:focus {
   background: rgba(255, 255, 255, 0.05);
 }
 
+input[type='range'] {
+  padding: 0;
+  accent-color: #ff9b54;
+}
+
 textarea {
   resize: vertical;
 }
@@ -97,8 +125,12 @@ pre {
 }
 
 .app-shell {
-  min-height: 100vh;
+  height: 100vh;
   padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  overflow: hidden;
 }
 
 .glass-panel {
@@ -114,7 +146,6 @@ pre {
   justify-content: space-between;
   gap: 1rem;
   padding: 1.35rem 1.5rem;
-  margin-bottom: 1.15rem;
   animation: rise-in 500ms ease;
 }
 
@@ -152,7 +183,8 @@ pre {
 .primary-button,
 .secondary-button,
 .palette-button,
-.template-card {
+.template-card,
+.collapse-button {
   border: 0;
   border-radius: 18px;
   padding: 0.9rem 1.15rem;
@@ -167,16 +199,23 @@ pre {
 
 .secondary-button,
 .palette-button,
-.template-card {
+.template-card,
+.collapse-button {
   color: var(--text);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 214, 181, 0.08);
 }
 
+.collapse-button {
+  padding: 0.65rem 0.85rem;
+  font-size: 0.82rem;
+}
+
 .primary-button:hover,
 .secondary-button:hover,
 .palette-button:hover,
-.template-card:hover {
+.template-card:hover,
+.collapse-button:hover {
   transform: translateY(-1px);
 }
 
@@ -185,14 +224,17 @@ pre {
 }
 
 .workspace-grid {
+  flex: 1;
+  min-height: 0;
   display: grid;
-  grid-template-columns: 310px minmax(0, 1fr) 360px;
+  grid-template-columns: var(--sidebar-width, 320px) minmax(0, 1fr) var(--inspector-width, 380px);
   gap: 1rem;
 }
 
 .sidebar,
 .inspector,
 .canvas-panel {
+  min-height: 0;
   padding: 1.1rem;
 }
 
@@ -201,12 +243,34 @@ pre {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
-.sidebar section,
-.inspector section {
+.canvas-panel {
   display: flex;
   flex-direction: column;
+  gap: 0.9rem;
+  overflow: hidden;
+}
+
+.panel-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 214, 181, 0.08);
+}
+
+.panel-section.is-collapsed {
+  gap: 0;
+}
+
+.panel-section__body {
+  display: grid;
   gap: 0.85rem;
 }
 
@@ -215,6 +279,12 @@ pre {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
+}
+
+.section-heading__main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .section-heading span,
@@ -318,13 +388,6 @@ pre {
   padding: 0.9rem;
 }
 
-.canvas-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-  min-height: 76vh;
-}
-
 .canvas-panel__header {
   display: flex;
   justify-content: space-between;
@@ -339,14 +402,14 @@ pre {
   padding: 0.75rem 1rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.05);
-  max-width: 320px;
+  max-width: 360px;
   text-align: center;
   font-size: 0.88rem;
 }
 
 .canvas-shell {
   flex: 1;
-  min-height: 580px;
+  min-height: 0;
   border-radius: 24px;
   overflow: hidden;
   border: 1px solid rgba(255, 214, 181, 0.08);
@@ -402,6 +465,28 @@ pre {
   color: var(--accent-2);
 }
 
+.builder-node-card__handle {
+  width: 20px !important;
+  height: 20px !important;
+  border: 3px solid rgba(255, 245, 235, 0.88) !important;
+  background: var(--node-accent) !important;
+  box-shadow: 0 0 0 10px rgba(255, 141, 58, 0.12) !important;
+  cursor: crosshair !important;
+}
+
+.react-flow__handle-connecting,
+.react-flow__handle-valid {
+  box-shadow: 0 0 0 14px rgba(82, 215, 255, 0.16) !important;
+}
+
+.react-flow__handle-left {
+  left: -12px !important;
+}
+
+.react-flow__handle-right {
+  right: -12px !important;
+}
+
 .react-flow__attribution {
   display: none;
 }
@@ -411,6 +496,10 @@ pre {
   background: rgba(23, 18, 15, 0.78) !important;
   border: 1px solid rgba(255, 214, 181, 0.08) !important;
   border-radius: 18px !important;
+}
+
+.react-flow__edge-path {
+  stroke-linecap: round;
 }
 
 .file-list strong {
@@ -466,7 +555,7 @@ pre {
 
 @media (max-width: 1280px) {
   .workspace-grid {
-    grid-template-columns: 290px minmax(0, 1fr);
+    grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
   }
 
   .inspector {
@@ -475,8 +564,15 @@ pre {
 }
 
 @media (max-width: 960px) {
+  body {
+    overflow: auto;
+  }
+
   .app-shell {
+    height: auto;
+    min-height: 100vh;
     padding: 0.85rem;
+    overflow: visible;
   }
 
   .topbar,
@@ -496,6 +592,12 @@ pre {
   .workspace-grid {
     display: flex;
     flex-direction: column;
+  }
+
+  .sidebar,
+  .inspector,
+  .canvas-panel {
+    overflow: visible;
   }
 
   .canvas-shell {

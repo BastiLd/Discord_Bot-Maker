@@ -8,6 +8,7 @@ import type {
   CommandStyle,
 } from '../types';
 import { createEmptyProject, createEdge, createNode, projectNameToSlug, touchProject } from './project';
+import { deepRepairText } from './text';
 
 interface ZipTextFile {
   path: string;
@@ -169,9 +170,9 @@ function collectWarnings(files: ZipTextFile[]): string[] {
   const warningMap: Array<[RegExp, string]> = [
     [/\bexec\s*\(/, 'exec() erkannt: unsichere oder dynamische Logik wurde nicht rekonstruiert.'],
     [/\beval\s*\(/, 'eval() erkannt: der Import bleibt absichtlich bei best-effort.'],
-    [/\bsubprocess\b/, 'subprocess-Nutzung erkannt: Systemaufrufe werden nicht in Nodes übersetzt.'],
+    [/\bsubprocess\b/, 'subprocess-Nutzung erkannt: Systemaufrufe werden nicht in Nodes \u00fcbersetzt.'],
     [/\bdiscord\.ext\.tasks\b/, 'discord.ext.tasks erkannt: Scheduler werden aktuell nur als Hinweis importiert.'],
-    [/\bload_extension\b/, 'Extension-Lader erkannt: modulare Erweiterungen müssen manuell geprüft werden.'],
+    [/\bload_extension\b/, 'Extension-Lader erkannt: modulare Erweiterungen m\u00fcssen manuell gepr\u00fcft werden.'],
     [/\b(open|aiohttp|requests)\b/, 'Datei- oder Netzwerkzugriffe erkannt: diese Logik bleibt im Export markiert.'],
   ];
 
@@ -264,7 +265,7 @@ function buildProjectFromTriggers(
           summary: 'Als Embed-Aufruf erkannt.',
           actionType: 'embed',
           embedTitle: embed.title ?? 'Importiertes Embed',
-          embedDescription: embed.description ?? 'Bitte Inhalt prüfen.',
+          embedDescription: embed.description ?? 'Bitte Inhalt pr\u00fcfen.',
           sourceFile: trigger.file,
         }),
       );
@@ -293,7 +294,7 @@ function buildProjectFromTriggers(
             ? component
             : 'button',
           buttonLabel: component === 'button' ? 'Importierter Button' : undefined,
-          responseText: 'Prüfe die originale Callback-Logik im Export.',
+          responseText: 'Pr\u00fcfe die originale Callback-Logik im Export.',
           sourceFile: trigger.file,
         }),
       );
@@ -302,10 +303,10 @@ function buildProjectFromTriggers(
     if (chain.length === 1) {
       chain.push(
         importedNode('action', { x: 360, y: rowBase }, {
-          title: 'Manuelle Prüfung',
-          summary: 'Für diesen Trigger wurde keine klare Aktion erkannt.',
+          title: 'Manuelle Pr\u00fcfung',
+          summary: 'F\u00fcr diesen Trigger wurde keine klare Aktion erkannt.',
           actionType: 'log',
-          notes: 'Die Funktion wurde gefunden, aber nicht eindeutig in eine Flow-Kette übersetzt.',
+          notes: 'Die Funktion wurde gefunden, aber nicht eindeutig in eine Flow-Kette \u00fcbersetzt.',
           sourceFile: trigger.file,
         }),
       );
@@ -330,11 +331,11 @@ function buildProjectFromTriggers(
       ? warnings
       : [
           ...warnings,
-          'Keine unterstützten Commands oder Events erkannt. Falls der Bot dynamisch aufgebaut ist, importiere bevorzugt ein vorher exportiertes builder-project.json.',
+          'Keine unterst\u00fctzten Commands oder Events erkannt. Falls der Bot dynamisch aufgebaut ist, importiere bevorzugt ein vorher exportiertes builder-project.json.',
         ],
   };
 
-  return touchProject(project);
+  return touchProject(deepRepairText(project));
 }
 
 async function readZipTextFiles(file: File): Promise<ZipTextFile[]> {
@@ -381,7 +382,7 @@ export async function importProjectArchive(file: File): Promise<BotProject> {
       warnings: project.reconstruction?.warnings ?? [],
     };
 
-    return touchProject(project);
+    return touchProject(deepRepairText(project));
   }
 
   const sourceFiles = await readZipTextFiles(file);
